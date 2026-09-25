@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS System - Cashier</title>
+    <link rel="stylesheet" href="pos.css">
+</head>
+<body>
+
+    <!-- TOP BAR -->
+    <div class="topbar">
+        <h1>🛒 SuperMart POS</h1>
+        <span id="datetime"></span>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+
+        <!-- LEFT SIDE: Product Search -->
+        <div class="left-panel">
+            <div class="search-bar">
+                <input type="text" id="barcodeInput"
+                       placeholder="🔍 Scan barcode or search..." />
+                <button onclick="searchProduct()">Search</button>
+            </div>
+            <div id="productList" class="product-grid"></div>
+        </div>
+
+        <!-- RIGHT SIDE: Cart -->
+        <div class="right-panel">
+            <h2>🧾 Current Sale</h2>
+            <div id="cartItems" class="cart-items"></div>
+            <div class="cart-summary">
+                <p>Total: <strong id="totalAmount">Rs. 0.00</strong></p>
+                <input type="number" id="amountPaid"
+                       placeholder="Amount paid by customer"
+                       oninput="calculateChange()" />
+                <p>Change: <strong id="changeAmount">Rs. 0.00</strong></p>
+                <button class="pay-btn" onclick="processSale()">
+                    ✅ Process Payment
+                </button>
+                <button class="clear-btn" onclick="clearCart()">
+                    🗑️ Clear Cart
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="pos.js"></script>
+</body>
+</html>

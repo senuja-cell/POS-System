@@ -1,0 +1,245 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    background: #f0f2f5;
+    height: 100vh;
+}
+
+/* TOP BAR */
+.topbar {
+    background: #1a73e8;
+    color: white;
+    padding: 12px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.topbar h1 {
+    font-size: 22px;
+}
+
+#datetime {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* MAIN LAYOUT */
+.container {
+    display: flex;
+    height: calc(100vh - 52px);
+}
+
+/* LEFT PANEL */
+.left-panel {
+    flex: 1.5;
+    padding: 16px;
+    overflow-y: auto;
+}
+
+.search-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.search-bar input {
+    flex: 1;
+    padding: 12px;
+    border: 2px solid #1a73e8;
+    border-radius: 8px;
+    font-size: 15px;
+    outline: none;
+}
+
+.search-bar button {
+    padding: 12px 20px;
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.search-bar button:hover {
+    background: #1558b0;
+}
+
+/* PRODUCT GRID */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+}
+
+.product-card {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 2px solid transparent;
+}
+
+.product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    border-color: #1a73e8;
+}
+
+.product-card .emoji {
+    font-size: 36px;
+    margin-bottom: 8px;
+}
+
+.product-card h4 {
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.product-card .price {
+    color: #1a73e8;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.product-card .stock {
+    font-size: 11px;
+    color: #888;
+    margin-top: 4px;
+}
+
+/* RIGHT PANEL */
+.right-panel {
+    width: 340px;
+    background: white;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.08);
+}
+
+.right-panel h2 {
+    margin-bottom: 12px;
+    color: #333;
+    font-size: 18px;
+}
+
+/* CART ITEMS */
+.cart-items {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 12px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #f0f0f0;
+    gap: 8px;
+}
+
+.cart-item .item-name {
+    font-size: 13px;
+    flex: 1;
+    color: #333;
+}
+
+.cart-item .item-qty {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cart-item .item-qty button {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #ddd;
+    background: #f5f5f5;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.cart-item .item-price {
+    font-size: 13px;
+    font-weight: bold;
+    color: #1a73e8;
+    min-width: 60px;
+    text-align: right;
+}
+
+/* CART SUMMARY */
+.cart-summary {
+    border-top: 2px solid #f0f0f0;
+    padding-top: 12px;
+}
+
+.cart-summary p {
+    font-size: 16px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.cart-summary strong {
+    color: #1a73e8;
+    font-size: 18px;
+}
+
+.cart-summary input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    margin-bottom: 10px;
+    outline: none;
+}
+
+.cart-summary input:focus {
+    border-color: #1a73e8;
+}
+
+.pay-btn {
+    width: 100%;
+    padding: 14px;
+    background: #34a853;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.pay-btn:hover {
+    background: #2d8f47;
+}
+
+.clear-btn {
+    width: 100%;
+    padding: 10px;
+    background: #ea4335;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.clear-btn:hover {
+    background: #c5352a;
+}
