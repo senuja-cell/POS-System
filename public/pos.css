@@ -414,3 +414,64 @@ body {
         font-size: 12px;
     }
 }
+
+/* ─── THERMAL RECEIPT PRINT ─── */
+@media print {
+    /* Hide everything except receipt */
+    body * { visibility: hidden; }
+    .receipt, .receipt * { visibility: visible; }
+    .receipt-buttons { display: none !important; }
+
+    /* Thermal paper format */
+    .receipt {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 80mm;
+        margin: 0;
+        padding: 4mm;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 12px;
+        border-radius: 0;
+        box-shadow: none;
+        color: #000;
+    }
+
+    .receipt-header h2 {
+        font-size: 16px;
+        font-weight: bold;
+        color: #000;
+    }
+
+    .receipt-header p {
+        font-size: 11px;
+        color: #000;
+    }
+
+    .receipt-divider {
+        color: #000;
+        font-size: 11px;
+        letter-spacing: 0;
+    }
+
+    .receipt-item {
+        font-size: 11px;
+        color: #000;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .receipt-row {
+        font-size: 12px;
+        color: #000;
+    }
+
+    .receipt-row strong {
+        color: #000;
+    }
+
+    .receipt-footer {
+        font-size: 11px;
+        color: #000;
+    }
+}

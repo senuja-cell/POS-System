@@ -191,18 +191,37 @@ async function processSale() {
 // ─── Show receipt modal ───
 function showReceipt(sale, amountPaid) {
     const now = new Date();
+    const shopName    = 'SuperMart';
+    const shopAddress = 'No. 123, Main Street, Colombo';
+    const shopPhone   = 'Tel: 011-2345678';
 
     document.getElementById('receiptDate').textContent =
         now.toLocaleString();
     document.getElementById('receiptId').textContent =
         `Receipt #${sale.id}`;
 
+    // Add shop info to header
+    document.querySelector('.receipt-header').innerHTML = `
+        <h2>🛒 ${shopName}</h2>
+        <p>${shopAddress}</p>
+        <p>${shopPhone}</p>
+        <p style="margin-top:6px">${now.toLocaleString()}</p>
+        <p><strong>Receipt #${sale.id}</strong></p>
+    `;
+
+    // Build items with proper alignment
     let itemsHTML = '';
     sale.items.forEach(item => {
+        const name     = item.product.name.substring(0, 18).padEnd(18);
+        const qty      = `x${item.quantity}`;
+        const subtotal = `Rs.${parseFloat(item.subtotal).toFixed(2)}`;
         itemsHTML += `
             <div class="receipt-item">
-                <span>${item.product.name} x${item.quantity}</span>
-                <span>Rs. ${parseFloat(item.subtotal).toFixed(2)}</span>
+                <span style="flex:1">${item.product.name}</span>
+            </div>
+            <div class="receipt-item" style="color:#555">
+                <span>${qty} x Rs.${parseFloat(item.unit_price).toFixed(2)}</span>
+                <span>${subtotal}</span>
             </div>
         `;
     });
