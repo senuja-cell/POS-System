@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POS Admin Dashboard</title>
     <link rel="stylesheet" href="admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -29,6 +30,9 @@
             </a>
             <a href="#" class="nav-item" onclick="showPage('alerts')">
                 ⚠️ Stock Alerts
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('reports')">
+                📈 Reports & Charts
             </a>
             <a href="#" class="nav-item" onclick="showPage('users')">
                 👥 User Management
@@ -242,6 +246,51 @@
         <!-- STOCK ALERTS PAGE -->
         <div id="page-alerts" class="page">
             <div id="alertsContent"></div>
+        </div>
+
+        <!-- REPORTS PAGE -->
+        <div id="page-reports" class="page">
+            <div class="stats-grid">
+                <div class="stat-card blue">
+                    <div class="stat-icon">📅</div>
+                    <div class="stat-info">
+                        <h4>This Week Sales</h4>
+                        <h2 id="weekSales">0</h2>
+                    </div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <h4>This Week Revenue</h4>
+                        <h2 id="weekRevenue">Rs. 0</h2>
+                    </div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-info">
+                        <h4>Best Day Revenue</h4>
+                        <h2 id="bestDay">Rs. 0</h2>
+                    </div>
+                </div>
+                <div class="stat-card red">
+                    <div class="stat-icon">🧾</div>
+                    <div class="stat-info">
+                        <h4>Avg. Daily Sales</h4>
+                        <h2 id="avgSales">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px">
+                <div class="form-card">
+                    <h3 style="margin-bottom:16px">📈 Weekly Revenue</h3>
+                    <canvas id="revenueChart" height="200"></canvas>
+                </div>
+                <div class="form-card">
+                    <h3 style="margin-bottom:16px">🧾 Daily Sales Count</h3>
+                    <canvas id="salesChart" height="200"></canvas>
+                </div>
+            </div>
         </div>
 
         <!-- USERS PAGE -->

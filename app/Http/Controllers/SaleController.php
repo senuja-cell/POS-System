@@ -107,4 +107,27 @@ class SaleController extends Controller
         //
     }
 
+    public function weeklyReport()
+    {
+        $data = [];
+
+        for ($i = 6; $i >= 0; $i--) {
+            $date  = now()->subDays($i)->toDateString();
+            $label = now()->subDays($i)->format('D d/m');
+
+            $sales   = Sale::whereDate('created_at', $date)->get();
+            $revenue = $sales->sum('total_amount');
+            $count   = $sales->count();
+
+            $data[] = [
+                'date'    => $date,
+                'label'   => $label,
+                'revenue' => $revenue,
+                'sales'   => $count,
+            ];
+        }
+
+        return response()->json($data);
+    }
+
 }

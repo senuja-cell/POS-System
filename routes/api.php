@@ -20,6 +20,7 @@ Route::middleware('auth:sanctum')->group(function () {
 // Custom Product Routes
 Route::get('products/barcode/{barcode}', [ProductController::class, 'findByBarcode']);
 Route::get('products/low-stock', [ProductController::class, 'lowStock']);
+Route::get('sales/weekly', [SaleController::class, 'weeklyReport']);
 
 // Custom Sale Route
 Route::get('sales/report', [SaleController::class, 'report']);

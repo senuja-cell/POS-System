@@ -38,6 +38,7 @@ function showPage(page) {
         sales:     'Sales History',
         grn:       'GRN / Stock In',
         alerts:    '⚠️ Stock Alerts',
+        reports:   '📈 Reports & Charts',
         users:     '👥 User Management',
     };
     document.getElementById('pageTitle').textContent = titles[page];
@@ -46,7 +47,7 @@ function showPage(page) {
     if (page === 'products')  loadProducts();
     if (page === 'sales')     loadSales();
     if (page === 'grn')       loadGrn();
-    if (page === 'alerts')    loadAlerts();
+    if (page === 'reports')   loadReports();
     if (page === 'users')     loadUsers();
 }
 
@@ -450,6 +451,94 @@ async function deleteUser(id, name) {
         alert('✅ User deleted!');
         loadUsers();
     }
+}
+// ─── REPORTS & CHARTS ───
+let revenueChartInstance = null;
+let salesChartInstance   = null;
+
+async function loadReports() {
+    const res  = await fetch(`${API}/sales/weekly`);
+    const data = await res.json();
+
+    const labels  = data.map(d => d.label);
+    const revenue = data.map(d => parseFloat(d.revenue));
+    const sales   = data.map(d => d.sales);
+
+    // ── Stats ──
+    const totalRevenue = revenue.reduce((a, b) => a + b, 0);
+    const totalSales   = sales.reduce((a, b) => a + b, 0);
+    const bestRevenue  = Math.max(...revenue);
+    const avgSales     = (totalSales / 7).toFixed(1);
+
+    document.getElementById('weekRevenue').textContent = `Rs. ${totalRevenue.toFixed(2)}`;
+    document.getElementById('weekSales').textContent   = totalSales;
+    document.getElementById('bestDay').textContent     = `Rs. ${bestRevenue.toFixed(2)}`;
+    document.getElementById('avgSales').textContent    = avgSales;
+
+    // ── Revenue Bar Chart ──
+    if (revenueChartInstance) revenueChartInstance.destroy();
+    revenueChartInstance = new Chart(
+        document.getElementById('revenueChart'),
+        {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [{
+                    label: 'Revenue (Rs.)',
+                    data: revenue,
+                    backgroundColor: 'rgba(26, 115, 232, 0.7)',
+                    borderColor: '#1a73e8',
+                    borderWidth: 2,
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: value => `Rs. ${value}`
+                        }
+                    }
+                }
+            }
+        }
+    );
+
+    // ── Sales Count Line Chart ──
+    if (salesChartInstance) salesChartInstance.destroy();
+    salesChartInstance = new Chart(
+        document.getElementById('salesChart'),
+        {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [{
+                    label: 'Sales Count',
+                    data: sales,
+                    backgroundColor: 'rgba(52, 168, 83, 0.1)',
+                    borderColor: '#34a853',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#34a853',
+                    pointRadius: 6,
+                    fill: true,
+                    tension: 0.4,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
+                }
+            }
+        }
+    );
 }
 
 // ─── LIVE CLOCK ───
