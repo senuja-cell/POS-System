@@ -170,7 +170,23 @@
         </div>
 
         <!-- SALES PAGE -->
+        <!-- SALES PAGE -->
         <div id="page-sales" class="page">
+            <div class="page-actions" style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+                <div class="form-group" style="margin:0">
+                    <label style="font-size:13px;color:#666;margin-right:8px">📅 Filter by Date:</label>
+                    <input type="date" id="salesDateFilter"
+                        style="padding:8px 12px;border:2px solid #e0e0e0;border-radius:8px;font-size:14px;outline:none"
+                        onchange="loadSales()" />
+                </div>
+                <button class="btn-secondary" onclick="clearDateFilter()">
+                    ✖ Clear Filter
+                </button>
+                <span id="salesFilterInfo" style="color:#888;font-size:13px"></span>
+            </div>
+
+            <br/>
+
             <table class="data-table">
                 <thead>
                     <tr>
@@ -180,11 +196,28 @@
                         <th>Paid</th>
                         <th>Change</th>
                         <th>Payment</th>
-                        <th>Date</th>
+                        <th>Date & Time</th>
                     </tr>
                 </thead>
                 <tbody id="salesTable"></tbody>
             </table>
+
+            <div id="salesSummary" style="background:white;border-radius:12px;padding:16px;margin-top:16px;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:none">
+                <div style="display:flex;gap:32px">
+                    <div>
+                        <p style="color:#888;font-size:13px">Total Transactions</p>
+                        <h3 id="summaryCount" style="color:#1a73e8">0</h3>
+                    </div>
+                    <div>
+                        <p style="color:#888;font-size:13px">Total Revenue</p>
+                        <h3 id="summaryRevenue" style="color:#34a853">Rs. 0.00</h3>
+                    </div>
+                    <div>
+                        <p style="color:#888;font-size:13px">Total Items Sold</p>
+                        <h3 id="summaryItems" style="color:#f9ab00">0</h3>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- GRN PAGE -->

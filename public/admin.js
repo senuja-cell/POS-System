@@ -188,15 +188,47 @@ async function deleteProduct(id, name) {
 
 // ─── SALES ───
 async function loadSales() {
-    const res   = await fetch(`${API}/sales`);
-    const sales = await res.json();
+    const dateFilter = document.getElementById('salesDateFilter').value;
+    const res        = await fetch(`${API}/sales`);
+    let sales        = await res.json();
 
+    // Filter by date if selected
+    if (dateFilter) {
+        sales = sales.filter(sale => {
+            const saleDate = new Date(sale.created_at).toISOString().split('T')[0];
+            return saleDate === dateFilter;
+        });
+        document.getElementById('salesFilterInfo').textContent =
+            `Showing ${sales.length} sale(s) for ${dateFilter}`;
+        document.getElementById('salesSummary').style.display = 'block';
+    } else {
+        document.getElementById('salesFilterInfo').textContent =
+            `Showing all ${sales.length} sales`;
+        document.getElementById('salesSummary').style.display = 'block';
+    }
+
+    // Calculate summary
+    const totalRevenue = sales.reduce((sum, s) => sum + parseFloat(s.total_amount), 0);
+    const totalItems   = sales.reduce((sum, s) => sum + s.items.length, 0);
+
+    document.getElementById('summaryCount').textContent   = sales.length;
+    document.getElementById('summaryRevenue').textContent = `Rs. ${totalRevenue.toFixed(2)}`;
+    document.getElementById('summaryItems').textContent   = totalItems;
+
+    // Render table
     const tbody = document.getElementById('salesTable');
     tbody.innerHTML = '';
+
     if (sales.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#888">No sales yet</td></tr>';
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align:center;color:#888;padding:24px">
+                    No sales found ${dateFilter ? `for ${dateFilter}` : ''}
+                </td>
+            </tr>`;
         return;
     }
+
     sales.forEach(sale => {
         tbody.innerHTML += `
             <tr>
@@ -210,6 +242,11 @@ async function loadSales() {
             </tr>
         `;
     });
+}
+
+function clearDateFilter() {
+    document.getElementById('salesDateFilter').value = '';
+    loadSales();
 }
 
 // ─── GRN ───
