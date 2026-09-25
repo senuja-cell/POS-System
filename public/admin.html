@@ -30,6 +30,9 @@
             <a href="#" class="nav-item" onclick="showPage('alerts')">
                 ⚠️ Stock Alerts
             </a>
+            <a href="#" class="nav-item" onclick="showPage('users')">
+                👥 User Management
+            </a>
             <a href="pos.html" class="nav-item pos-link">
                 🖥️ Go to POS
             </a>
@@ -107,7 +110,6 @@
                 </button>
             </div>
 
-            <!-- ADD/EDIT PRODUCT FORM -->
             <div id="productForm" class="form-card" style="display:none">
                 <h3 id="formTitle">Add New Product</h3>
                 <input type="hidden" id="editProductId" />
@@ -240,6 +242,59 @@
         <!-- STOCK ALERTS PAGE -->
         <div id="page-alerts" class="page">
             <div id="alertsContent"></div>
+        </div>
+
+        <!-- USERS PAGE -->
+        <div id="page-users" class="page">
+            <div class="page-actions">
+                <button class="btn-primary" onclick="showAddUser()">
+                    ➕ Add User
+                </button>
+            </div>
+
+            <div id="userForm" class="form-card" style="display:none">
+                <h3 id="userFormTitle">Add New User</h3>
+                <input type="hidden" id="editUserId" />
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="userFieldName" placeholder="e.g. John Smith" />
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="userFieldEmail" placeholder="e.g. john@pos.com" />
+                    </div>
+                    <div class="form-group">
+                        <label>Password <span style="color:#888;font-size:11px">(leave blank to keep)</span></label>
+                        <input type="password" id="userFieldPassword" placeholder="Min 6 characters" />
+                    </div>
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select id="userFieldRole">
+                            <option value="cashier">Cashier</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-primary" onclick="saveUser()">💾 Save User</button>
+                    <button class="btn-secondary" onclick="hideUserForm()">Cancel</button>
+                </div>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="usersTable"></tbody>
+            </table>
         </div>
 
     </div>

@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\GrnController;
+use App\Http\Controllers\UserController;
 
 // Auth Routes (public)
 Route::post('login', [AuthController::class, 'login']);
@@ -27,3 +28,4 @@ Route::get('sales/report', [SaleController::class, 'report']);
 Route::apiResource('products', ProductController::class);
 Route::apiResource('sales', SaleController::class);
 Route::apiResource('grns', GrnController::class);
+Route::apiResource('users', UserController::class);

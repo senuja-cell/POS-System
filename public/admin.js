@@ -1,17 +1,15 @@
 const API = 'http://127.0.0.1:8000/api';
-let allProducts = [];
-
-// ─── AUTH CHECK ───
 const token = localStorage.getItem('pos_token');
 const userName = localStorage.getItem('pos_user');
 const userRole = localStorage.getItem('pos_role');
 
+// ─── AUTH CHECK ───
 if (!token || userRole !== 'admin') {
     window.location.href = 'login.html';
 }
 
 function logout() {
-    fetch('http://127.0.0.1:8000/api/logout', {
+    fetch(`${API}/logout`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -22,6 +20,9 @@ function logout() {
         window.location.href = 'login.html';
     });
 }
+
+let allProducts = [];
+let allUsers = [];
 
 // ─── PAGE NAVIGATION ───
 function showPage(page) {
@@ -36,7 +37,8 @@ function showPage(page) {
         products:  'Products Management',
         sales:     'Sales History',
         grn:       'GRN / Stock In',
-        alerts:    '⚠️ Stock Alerts'
+        alerts:    '⚠️ Stock Alerts',
+        users:     '👥 User Management',
     };
     document.getElementById('pageTitle').textContent = titles[page];
 
@@ -45,16 +47,17 @@ function showPage(page) {
     if (page === 'sales')     loadSales();
     if (page === 'grn')       loadGrn();
     if (page === 'alerts')    loadAlerts();
+    if (page === 'users')     loadUsers();
 }
 
 // ─── DASHBOARD ───
 async function loadDashboard() {
     document.getElementById('userGreeting').textContent = `👋 ${userName}`;
+
     const [productsRes, reportRes, alertsRes] = await Promise.all([
         fetch(`${API}/products`),
         fetch(`${API}/sales/report`),
         fetch(`${API}/products/low-stock`)
-
     ]);
 
     const products = await productsRes.json();
@@ -111,13 +114,13 @@ async function loadProducts() {
 }
 
 function showAddProduct() {
-    document.getElementById('formTitle').textContent = 'Add New Product';
-    document.getElementById('editProductId').value = '';
-    document.getElementById('fieldName').value     = '';
-    document.getElementById('fieldBarcode').value  = '';
-    document.getElementById('fieldPrice').value    = '';
-    document.getElementById('fieldStock').value    = '';
-    document.getElementById('fieldCategory').value = 'Beverages';
+    document.getElementById('formTitle').textContent   = 'Add New Product';
+    document.getElementById('editProductId').value     = '';
+    document.getElementById('fieldName').value         = '';
+    document.getElementById('fieldBarcode').value      = '';
+    document.getElementById('fieldPrice').value        = '';
+    document.getElementById('fieldStock').value        = '';
+    document.getElementById('fieldCategory').value     = 'Beverages';
     document.getElementById('productForm').style.display = 'block';
 }
 
@@ -139,7 +142,7 @@ function editProduct(id) {
 }
 
 async function saveProduct() {
-    const id = document.getElementById('editProductId').value;
+    const id   = document.getElementById('editProductId').value;
     const data = {
         name:     document.getElementById('fieldName').value,
         barcode:  document.getElementById('fieldBarcode').value,
@@ -172,12 +175,10 @@ async function saveProduct() {
 
 async function deleteProduct(id, name) {
     if (!confirm(`🗑️ Delete "${name}"? This cannot be undone!`)) return;
-
     const res = await fetch(`${API}/products/${id}`, {
         method:  'DELETE',
         headers: { 'Accept': 'application/json' }
     });
-
     if (res.ok) {
         alert('✅ Product deleted!');
         loadProducts();
@@ -314,9 +315,9 @@ async function saveGrn() {
 
 // ─── STOCK ALERTS ───
 async function loadAlerts() {
-    const res    = await fetch(`${API}/products/low-stock`);
-    const data   = await res.json();
-    const div    = document.getElementById('alertsContent');
+    const res  = await fetch(`${API}/products/low-stock`);
+    const data = await res.json();
+    const div  = document.getElementById('alertsContent');
 
     if (data.low_stock_count === 0) {
         div.innerHTML = `
@@ -327,7 +328,7 @@ async function loadAlerts() {
     }
 
     div.innerHTML = `<h3 style="margin-bottom:16px;color:#ea4335">
-        ⚠️ ${data.low_stock_count} product(s) running low on stock!</h3>`;
+        ⚠️ ${data.low_stock_count} product(s) running low!</h3>`;
 
     data.products.forEach(p => {
         div.innerHTML += `
@@ -340,6 +341,115 @@ async function loadAlerts() {
             </div>
         `;
     });
+}
+
+// ─── USER MANAGEMENT ───
+async function loadUsers() {
+    const res = await fetch(`${API}/users`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+        }
+    });
+    allUsers = await res.json();
+
+    const tbody = document.getElementById('usersTable');
+    tbody.innerHTML = '';
+    allUsers.forEach(u => {
+        tbody.innerHTML += `
+            <tr>
+                <td>${u.id}</td>
+                <td>${u.name}</td>
+                <td>${u.email}</td>
+                <td>
+                    <span style="background:${u.role === 'admin' ? '#1a73e8' : '#34a853'};
+                        color:white;padding:4px 10px;border-radius:12px;font-size:12px">
+                        ${u.role}
+                    </span>
+                </td>
+                <td>${new Date(u.created_at).toLocaleDateString()}</td>
+                <td>
+                    <button class="btn-edit" onclick="editUser(${u.id})">✏️ Edit</button>
+                    <button class="btn-delete" onclick="deleteUser(${u.id}, '${u.name}')">🗑️ Delete</button>
+                </td>
+            </tr>
+        `;
+    });
+}
+
+function showAddUser() {
+    document.getElementById('userFormTitle').textContent  = 'Add New User';
+    document.getElementById('editUserId').value           = '';
+    document.getElementById('userFieldName').value        = '';
+    document.getElementById('userFieldEmail').value       = '';
+    document.getElementById('userFieldPassword').value    = '';
+    document.getElementById('userFieldRole').value        = 'cashier';
+    document.getElementById('userForm').style.display     = 'block';
+}
+
+function hideUserForm() {
+    document.getElementById('userForm').style.display = 'none';
+}
+
+function editUser(id) {
+    const u = allUsers.find(u => u.id === id);
+    document.getElementById('userFormTitle').textContent  = 'Edit User';
+    document.getElementById('editUserId').value           = u.id;
+    document.getElementById('userFieldName').value        = u.name;
+    document.getElementById('userFieldEmail').value       = u.email;
+    document.getElementById('userFieldPassword').value    = '';
+    document.getElementById('userFieldRole').value        = u.role;
+    document.getElementById('userForm').style.display     = 'block';
+    window.scrollTo(0, 0);
+}
+
+async function saveUser() {
+    const id   = document.getElementById('editUserId').value;
+    const data = {
+        name:     document.getElementById('userFieldName').value,
+        email:    document.getElementById('userFieldEmail').value,
+        password: document.getElementById('userFieldPassword').value,
+        role:     document.getElementById('userFieldRole').value,
+    };
+
+    const url    = id ? `${API}/users/${id}` : `${API}/users`;
+    const method = id ? 'PUT' : 'POST';
+
+    const res = await fetch(url, {
+        method,
+        headers: {
+            'Content-Type':  'application/json',
+            'Accept':        'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+    });
+
+    if (res.ok) {
+        alert(id ? '✅ User updated!' : '✅ User added!');
+        hideUserForm();
+        loadUsers();
+    } else {
+        const err = await res.json();
+        alert('❌ Error: ' + JSON.stringify(err.errors));
+    }
+}
+
+async function deleteUser(id, name) {
+    if (!confirm(`🗑️ Delete user "${name}"? They will lose access immediately!`)) return;
+
+    const res = await fetch(`${API}/users/${id}`, {
+        method:  'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept':        'application/json'
+        }
+    });
+
+    if (res.ok) {
+        alert('✅ User deleted!');
+        loadUsers();
+    }
 }
 
 // ─── LIVE CLOCK ───
