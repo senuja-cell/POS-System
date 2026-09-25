@@ -1,6 +1,28 @@
 const API = 'http://127.0.0.1:8000/api';
 let allProducts = [];
 
+// ─── AUTH CHECK ───
+const token = localStorage.getItem('pos_token');
+const userName = localStorage.getItem('pos_user');
+const userRole = localStorage.getItem('pos_role');
+
+if (!token || userRole !== 'admin') {
+    window.location.href = 'login.html';
+}
+
+function logout() {
+    fetch('http://127.0.0.1:8000/api/logout', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+        }
+    }).finally(() => {
+        localStorage.clear();
+        window.location.href = 'login.html';
+    });
+}
+
 // ─── PAGE NAVIGATION ───
 function showPage(page) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -27,10 +49,12 @@ function showPage(page) {
 
 // ─── DASHBOARD ───
 async function loadDashboard() {
+    document.getElementById('userGreeting').textContent = `👋 ${userName}`;
     const [productsRes, reportRes, alertsRes] = await Promise.all([
         fetch(`${API}/products`),
         fetch(`${API}/sales/report`),
         fetch(`${API}/products/low-stock`)
+
     ]);
 
     const products = await productsRes.json();

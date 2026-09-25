@@ -1,8 +1,30 @@
 const API = 'http://127.0.0.1:8000/api';
 let cart = [];
 
+// ─── AUTH CHECK ───
+const token = localStorage.getItem('pos_token');
+const userName = localStorage.getItem('pos_user');
+
+if (!token) {
+    window.location.href = 'login.html';
+}
+
+function logout() {
+    fetch('http://127.0.0.1:8000/api/logout', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json'
+        }
+    }).finally(() => {
+        localStorage.clear();
+        window.location.href = 'login.html';
+    });
+}
+
 // ─── Load all products when page opens ───
 async function loadProducts() {
+    document.getElementById('userGreeting').textContent = `👋 ${userName}`;
     const res = await fetch(`${API}/products`);
     const products = await res.json();
     displayProducts(products);

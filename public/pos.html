@@ -11,7 +11,11 @@
     <!-- TOP BAR -->
     <div class="topbar">
         <h1>🛒 SuperMart POS</h1>
-        <span id="datetime"></span>
+        <div style="display:flex;align-items:center;gap:16px">
+            <span id="userGreeting" style="font-size:14px;opacity:0.9"></span>
+            <span id="datetime" style="font-size:14px;opacity:0.9"></span>
+            <button onclick="logout()" style="background:rgba(255,255,255,0.2);color:white;border:1px solid rgba(255,255,255,0.4);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:13px">🚪 Logout</button>
+        </div>
     </div>
 
     <!-- MAIN CONTENT -->
