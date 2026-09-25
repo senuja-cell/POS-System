@@ -360,3 +360,57 @@ body {
     .receipt { position: fixed; top: 0; left: 0; }
     .receipt-buttons { display: none; }
 }
+/* ─── TABLET (max 900px) ─── */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .left-panel {
+        padding: 12px;
+    }
+
+    .right-panel {
+        width: 100%;
+        box-shadow: none;
+        border-top: 2px solid #f0f0f0;
+        padding: 16px;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    }
+
+    .topbar h1 {
+        font-size: 16px;
+    }
+}
+
+/* ─── MOBILE (max 600px) ─── */
+@media (max-width: 600px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .product-card {
+        padding: 10px;
+    }
+
+    .product-card .emoji {
+        font-size: 28px;
+    }
+
+    .product-card h4 {
+        font-size: 11px;
+    }
+
+    .search-bar input {
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    .cart-item .item-name {
+        font-size: 12px;
+    }
+}
