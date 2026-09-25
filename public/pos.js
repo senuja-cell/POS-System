@@ -33,12 +33,12 @@ function displayProducts(products) {
 // ─── Emoji based on category ───
 function getCategoryEmoji(category) {
     const emojis = {
-        'Beverages': '🥤',
-        'Groceries': '🌾',
-        'Dairy': '🥛',
-        'Bakery': '🍞',
-        'Snacks': '🍿',
-        'Household': '🧹',
+        'Beverages':     '🥤',
+        'Groceries':     '🌾',
+        'Dairy':         '🥛',
+        'Bakery':        '🍞',
+        'Snacks':        '🍿',
+        'Household':     '🧹',
         'Personal Care': '🧴',
     };
     return emojis[category] || '📦';
@@ -49,7 +49,6 @@ async function searchProduct() {
     const input = document.getElementById('barcodeInput').value.trim();
     if (!input) { loadProducts(); return; }
 
-    // Try barcode first
     const res = await fetch(`${API}/products/barcode/${input}`);
     if (res.ok) {
         const product = await res.json();
@@ -58,7 +57,6 @@ async function searchProduct() {
         return;
     }
 
-    // If not found by barcode, search by name
     const allRes = await fetch(`${API}/products`);
     const all = await allRes.json();
     const filtered = all.filter(p =>
@@ -121,8 +119,8 @@ function renderCart() {
 
 // ─── Calculate change ───
 function calculateChange() {
-    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    const paid = parseFloat(document.getElementById('amountPaid').value) || 0;
+    const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    const paid  = parseFloat(document.getElementById('amountPaid').value) || 0;
     const change = paid - total;
     document.getElementById('changeAmount').textContent =
         `Rs. ${change >= 0 ? change.toFixed(2) : '0.00'}`;
@@ -133,7 +131,7 @@ async function processSale() {
     if (cart.length === 0) { alert('⚠️ Cart is empty!'); return; }
 
     const amountPaid = parseFloat(document.getElementById('amountPaid').value);
-    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
     if (!amountPaid || amountPaid < total) {
         alert('⚠️ Amount paid is not enough!');
@@ -143,29 +141,69 @@ async function processSale() {
     const saleData = {
         items: cart.map(item => ({
             product_id: item.id,
-            quantity: item.quantity
+            quantity:   item.quantity
         })),
         payment_method: 'cash',
-        amount_paid: amountPaid
+        amount_paid:    amountPaid
     };
 
     const res = await fetch(`${API}/sales`, {
-        method: 'POST',
+        method:  'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Accept': 'application/json'
+            'Accept':       'application/json'
         },
         body: JSON.stringify(saleData)
     });
 
     if (res.ok) {
         const sale = await res.json();
-        alert(`✅ Sale Complete!\nTotal: Rs. ${sale.total_amount}\nChange: Rs. ${sale.change_amount}`);
+        showReceipt(sale, amountPaid);
         clearCart();
-        loadProducts(); // Refresh stock
+        loadProducts();
     } else {
         alert('❌ Sale failed! Please try again.');
     }
+}
+
+// ─── Show receipt modal ───
+function showReceipt(sale, amountPaid) {
+    const now = new Date();
+
+    document.getElementById('receiptDate').textContent =
+        now.toLocaleString();
+    document.getElementById('receiptId').textContent =
+        `Receipt #${sale.id}`;
+
+    let itemsHTML = '';
+    sale.items.forEach(item => {
+        itemsHTML += `
+            <div class="receipt-item">
+                <span>${item.product.name} x${item.quantity}</span>
+                <span>Rs. ${parseFloat(item.subtotal).toFixed(2)}</span>
+            </div>
+        `;
+    });
+    document.getElementById('receiptItems').innerHTML = itemsHTML;
+
+    document.getElementById('receiptTotal').textContent =
+        `Rs. ${parseFloat(sale.total_amount).toFixed(2)}`;
+    document.getElementById('receiptPaid').textContent =
+        `Rs. ${parseFloat(amountPaid).toFixed(2)}`;
+    document.getElementById('receiptChange').textContent =
+        `Rs. ${parseFloat(sale.change_amount).toFixed(2)}`;
+
+    document.getElementById('receiptModal').style.display = 'flex';
+}
+
+// ─── Print receipt ───
+function printReceipt() {
+    window.print();
+}
+
+// ─── Close receipt ───
+function closeReceipt() {
+    document.getElementById('receiptModal').style.display = 'none';
 }
 
 // ─── Clear the cart ───

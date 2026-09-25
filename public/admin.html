@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS Admin Dashboard</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="sidebar-logo">
+            <h2>🛒 SuperMart</h2>
+            <p>Admin Panel</p>
+        </div>
+        <nav>
+            <a href="#" class="nav-item active" onclick="showPage('dashboard')">
+                📊 Dashboard
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('products')">
+                📦 Products
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('sales')">
+                🧾 Sales History
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('grn')">
+                🚚 GRN / Stock In
+            </a>
+            <a href="#" class="nav-item" onclick="showPage('alerts')">
+                ⚠️ Stock Alerts
+            </a>
+            <a href="pos.html" class="nav-item pos-link">
+                🖥️ Go to POS
+            </a>
+        </nav>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- TOP BAR -->
+        <div class="topbar">
+            <h3 id="pageTitle">Dashboard</h3>
+            <span id="datetime"></span>
+        </div>
+
+        <!-- DASHBOARD PAGE -->
+        <div id="page-dashboard" class="page active">
+            <div class="stats-grid">
+                <div class="stat-card blue">
+                    <div class="stat-icon">📦</div>
+                    <div class="stat-info">
+                        <h4>Total Products</h4>
+                        <h2 id="statProducts">0</h2>
+                    </div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-icon">🧾</div>
+                    <div class="stat-info">
+                        <h4>Today's Sales</h4>
+                        <h2 id="statSales">0</h2>
+                    </div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-info">
+                        <h4>Today's Revenue</h4>
+                        <h2 id="statRevenue">Rs. 0</h2>
+                    </div>
+                </div>
+                <div class="stat-card red">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-info">
+                        <h4>Low Stock Items</h4>
+                        <h2 id="statLowStock">0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-sales">
+                <h3>📋 Today's Sales</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Receipt #</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dashboardSales"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- PRODUCTS PAGE -->
+        <div id="page-products" class="page">
+            <div class="page-actions">
+                <button class="btn-primary" onclick="showAddProduct()">
+                    ➕ Add Product
+                </button>
+            </div>
+
+            <!-- ADD/EDIT PRODUCT FORM -->
+            <div id="productForm" class="form-card" style="display:none">
+                <h3 id="formTitle">Add New Product</h3>
+                <input type="hidden" id="editProductId" />
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Product Name</label>
+                        <input type="text" id="fieldName" placeholder="e.g. Coca Cola 500ml" />
+                    </div>
+                    <div class="form-group">
+                        <label>Barcode</label>
+                        <input type="text" id="fieldBarcode" placeholder="e.g. 4890008100001" />
+                    </div>
+                    <div class="form-group">
+                        <label>Price (Rs.)</label>
+                        <input type="number" id="fieldPrice" placeholder="e.g. 250" />
+                    </div>
+                    <div class="form-group">
+                        <label>Stock</label>
+                        <input type="number" id="fieldStock" placeholder="e.g. 50" />
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="fieldCategory">
+                            <option>Beverages</option>
+                            <option>Groceries</option>
+                            <option>Dairy</option>
+                            <option>Bakery</option>
+                            <option>Snacks</option>
+                            <option>Household</option>
+                            <option>Personal Care</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-primary" onclick="saveProduct()">💾 Save</button>
+                    <button class="btn-secondary" onclick="hideProductForm()">Cancel</button>
+                </div>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Barcode</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Stock</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="productsTable"></tbody>
+            </table>
+        </div>
+
+        <!-- SALES PAGE -->
+        <div id="page-sales" class="page">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Receipt #</th>
+                        <th>Items</th>
+                        <th>Total</th>
+                        <th>Paid</th>
+                        <th>Change</th>
+                        <th>Payment</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="salesTable"></tbody>
+            </table>
+        </div>
+
+        <!-- GRN PAGE -->
+        <div id="page-grn" class="page">
+            <div class="page-actions">
+                <button class="btn-primary" onclick="showGrnForm()">
+                    ➕ New GRN
+                </button>
+            </div>
+
+            <div id="grnForm" class="form-card" style="display:none">
+                <h3>New Stock Delivery (GRN)</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Supplier Name</label>
+                        <input type="text" id="grnSupplier" placeholder="e.g. ABC Distributors" />
+                    </div>
+                    <div class="form-group">
+                        <label>Received Date</label>
+                        <input type="date" id="grnDate" />
+                    </div>
+                    <div class="form-group">
+                        <label>Notes (optional)</label>
+                        <input type="text" id="grnNotes" placeholder="e.g. Monthly delivery" />
+                    </div>
+                </div>
+                <h4 style="margin:12px 0 8px">Products Received:</h4>
+                <div id="grnItems">
+                    <div class="grn-item-row">
+                        <select class="grn-product"></select>
+                        <input type="number" class="grn-qty" placeholder="Qty" min="1" />
+                        <input type="number" class="grn-cost" placeholder="Cost/unit" min="0" />
+                        <button onclick="removeGrnRow(this)">✖</button>
+                    </div>
+                </div>
+                <button class="btn-secondary" onclick="addGrnRow()">
+                    ➕ Add Product
+                </button>
+                <div class="form-actions">
+                    <button class="btn-primary" onclick="saveGrn()">💾 Save GRN</button>
+                    <button class="btn-secondary" onclick="hideGrnForm()">Cancel</button>
+                </div>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>GRN #</th>
+                        <th>Supplier</th>
+                        <th>Date</th>
+                        <th>Total Cost</th>
+                        <th>Items</th>
+                    </tr>
+                </thead>
+                <tbody id="grnTable"></tbody>
+            </table>
+        </div>
+
+        <!-- STOCK ALERTS PAGE -->
+        <div id="page-alerts" class="page">
+            <div id="alertsContent"></div>
+        </div>
+
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

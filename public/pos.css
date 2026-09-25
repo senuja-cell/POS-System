@@ -243,3 +243,120 @@ body {
 .clear-btn:hover {
     background: #c5352a;
 }
+/* ─── RECEIPT MODAL ─── */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.receipt {
+    background: white;
+    width: 320px;
+    border-radius: 12px;
+    padding: 24px;
+    font-family: 'Courier New', monospace;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.receipt-header {
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.receipt-header h2 {
+    font-size: 22px;
+    color: #1a73e8;
+    margin-bottom: 4px;
+}
+
+.receipt-header p {
+    font-size: 12px;
+    color: #666;
+    margin: 2px 0;
+}
+
+.receipt-divider {
+    color: #999;
+    font-size: 12px;
+    margin: 8px 0;
+    letter-spacing: 1px;
+}
+
+.receipt-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    padding: 4px 0;
+    color: #333;
+}
+
+.receipt-item span:first-child {
+    flex: 1;
+}
+
+.receipt-totals {
+    margin: 4px 0;
+}
+
+.receipt-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    padding: 4px 0;
+    color: #333;
+}
+
+.receipt-row strong {
+    color: #1a73e8;
+}
+
+.receipt-footer {
+    text-align: center;
+    font-size: 13px;
+    color: #666;
+    margin: 8px 0;
+}
+
+.receipt-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.receipt-buttons button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.receipt-buttons button:first-child {
+    background: #1a73e8;
+    color: white;
+}
+
+.receipt-buttons button:last-child {
+    background: #ea4335;
+    color: white;
+}
+
+/* ─── PRINT STYLES ─── */
+@media print {
+    body * { visibility: hidden; }
+    .receipt, .receipt * { visibility: visible; }
+    .receipt { position: fixed; top: 0; left: 0; }
+    .receipt-buttons { display: none; }
+}

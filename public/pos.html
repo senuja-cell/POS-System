@@ -48,6 +48,41 @@
 
     </div>
 
+    <!-- RECEIPT MODAL -->
+    <div id="receiptModal" class="modal-overlay" style="display:none">
+        <div class="receipt">
+            <div class="receipt-header">
+                <h2>🛒 SuperMart</h2>
+                <p>Thank you for shopping!</p>
+                <p id="receiptDate"></p>
+                <p id="receiptId"></p>
+            </div>
+            <div class="receipt-divider">--------------------------------</div>
+            <div id="receiptItems"></div>
+            <div class="receipt-divider">--------------------------------</div>
+            <div class="receipt-totals">
+                <div class="receipt-row">
+                    <span>Total</span>
+                    <strong id="receiptTotal"></strong>
+                </div>
+                <div class="receipt-row">
+                    <span>Paid</span>
+                    <strong id="receiptPaid"></strong>
+                </div>
+                <div class="receipt-row">
+                    <span>Change</span>
+                    <strong id="receiptChange"></strong>
+                </div>
+            </div>
+            <div class="receipt-divider">--------------------------------</div>
+            <p class="receipt-footer">Please come again! 😊</p>
+            <div class="receipt-buttons">
+                <button onclick="printReceipt()">🖨️ Print</button>
+                <button onclick="closeReceipt()">✖ Close</button>
+            </div>
+        </div>
+    </div>
+
     <script src="pos.js"></script>
 </body>
 </html>
